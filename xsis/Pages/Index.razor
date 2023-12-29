@@ -1,0 +1,43 @@
+﻿@page "/"
+
+@using xsis.Data;
+@using xsis.Controller;
+
+<PageTitle>Movies</PageTitle>
+
+<h3>Search Movies</h3>
+<input @bind="search" />
+<button @onclick="SearchMovies">Search</button>
+
+@foreach (var movie in Movie)
+{
+    <div>
+        <h4>@movie.Title</h4>
+        <button @onclick="() => ShowMovieDetail(movie.Id)">View Details</button>
+    </div>
+}
+
+@if (selectedMovie != null)
+{
+    <MovieDetailModal @ref="movieDetailModal" Movie="selectedMovie" />
+}
+
+@code {
+    private string search;
+    private List<Movie> Movie = new List<Movie>();
+    private MovieDetail selectedMovie;
+    private MovieDetailModal movieDetailModal;
+    private MovieService movieService = new MovieService(new HttpClient());
+
+    private async Task SearchMovies()
+    {
+        Movie = await movieService.SearchMoviesByTitle(search);
+    }
+
+    private async Task ShowMovieDetail(int movieId)
+    {
+        selectedMovie = await movieService.GetMovieDetails(movieId);
+        movieDetailModal.Show();
+    }
+
+}

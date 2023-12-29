@@ -1,0 +1,33 @@
+﻿@using xsis.Data;
+
+<h3>MovieDetailModal</h3>
+
+@if (Movie != null && showModal)
+{
+    <div>
+        <h2>@Movie.Title</h2>
+        <p>@Movie.Description</p>
+        @if (!string.IsNullOrEmpty(Movie.TrailerUrl))
+        {
+            <iframe width="560" height="315" src="@Movie.TrailerUrl" frameborder="0" allowfullscreen></iframe>
+        }
+        <button @onclick="CloseModal">Close</button>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public MovieDetail Movie { get; set; }
+
+    private bool showModal = false;
+
+    public void Show()
+    {
+        showModal = true;
+    }
+
+    public void CloseModal()
+    {
+        showModal = false;
+    }
+}
